@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Primary Colors -->
+    <color name="primary">#00ab6b</color>
+    <color name="primary_dark">#008855</color>
+    <color name="primary_light">#33c29a</color>
+    <color name="accent">#FFC107</color>
+
+    <!-- Background Colors -->
+    <color name="background">#FFFFFFFF</color>
+    <color name="component_background">#FFFFFFFF</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#88000000</color>
+    <color name="text_accent">#FFC107</color>
+    <color name="text_on_primary">#FFFFFFFF</color>
+
+    <!-- Neutral Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_light">#E0E0E0</color>
+    <color name="gray_dark">#808080</color>
+
+    <!-- Button Colors -->
+    <color name="button_primary">#00ab6b</color>
+    <color name="button_primary_text">#FFFFFFFF</color>
+    <color name="button_secondary">#FFC107</color>
+    <color name="button_secondary_text">#FF000000</color>
+
+    <!-- Icon Colors -->
+    <color name="icon_primary">#212121</color>
+    <color name="icon_secondary">#757575</color>
+    <color name="icon_error">#D32F2F</color>
+
 </resources>

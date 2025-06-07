@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default Margins -->
+    <dimen name="margin_xsmall">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_xlarge">32dp</dimen>
+
+    <!-- Default Padding -->
+    <dimen name="padding_xsmall">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+    <dimen name="padding_xlarge">32dp</dimen>
+
+    <!-- Default Text Sizes -->
+    <dimen name="text_size_xsmall">10sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_xlarge">24sp</dimen>
+
+    <!-- Icon Sizes -->
+    <dimen name="icon_size_small">24dp</dimen>
+    <dimen name="icon_size_medium">32dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
+
+    <!-- Default Component Heights -->
+    <dimen name="button_height_default">48dp</dimen>
+    <dimen name="edittext_height_default">48dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+
+    <!-- Line Spacing -->
+    <dimen name="line_spacing_default">2dp</dimen>
+
+
+    <!-- Card Properties -->
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+
+    <!-- Default Divider Height -->
+    <dimen name="divider_height">1dp</dimen>
+
+
+    <!-- Default Image Height -->
+    <dimen name="image_height">300dp</dimen>
+    <dimen name="user_profile_image_height">60dp</dimen>
+
+
+</resources>

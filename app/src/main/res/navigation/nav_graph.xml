@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/sessionListFragment">
+
+    <fragment
+        android:id="@+id/sessionListFragment"
+        android:name="com.poker.ui.session.SessionListFragment"
+        android:label="Sessions"
+        tools:layout="@layout/fragment_session_list">
+    </fragment>
+
+</navigation>
