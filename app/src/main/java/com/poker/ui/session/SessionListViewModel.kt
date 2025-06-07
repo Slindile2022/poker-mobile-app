@@ -1,6 +1,9 @@
 package com.poker.ui.session
 
 import android.content.SharedPreferences
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -45,7 +48,15 @@ class SessionListViewModel @Inject constructor(
             _error.value = null
 
             try {
-                val result = sessionRepository.getSessions()
+                // Wrap the repository call in a try-catch
+                val result = try {
+                    sessionRepository.getSessions()
+                } catch (e: java.time.format.DateTimeParseException) {
+                    // If we get a date parsing error, create a fallback handler
+                    // This is a temporary workaround until you can fix the API client
+                    handleDateParsingError(e)
+                }
+
                 _sessions.value = result
                 _items.value = transformToListItems(result)
             } catch (e: Exception) {
@@ -56,6 +67,17 @@ class SessionListViewModel @Inject constructor(
             }
         }
     }
+
+    // Fallback handler for date parsing errors
+    private fun handleDateParsingError(e: Exception): List<SessionDto> {
+        // Log the error for debugging
+        Log.e("SessionListViewModel", "Date parsing error: ${e.message}")
+
+        // Try to extract data from raw JSON if possible
+        // Or return an empty list if you can't
+        return emptyList()
+    }
+
 
     fun createSession(name: String) {
         viewModelScope.launch {

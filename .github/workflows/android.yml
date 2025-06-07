@@ -23,14 +23,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Create JavaPoet fix
-        run: |
-          echo "configurations.all { resolutionStrategy.force 'com.squareup:javapoet:1.13.0' }" > javapoet-fix.gradle
-
-      - name: Apply JavaPoet fix
-        run: |
-          echo "apply from: '$rootDir/javapoet-fix.gradle'" >> build.gradle.kts
-
       - name: Build with Gradle
         run: ./gradlew build
 
