@@ -49,5 +49,5 @@ object NetworkModule {
         return apiClient.createService(VotesApi::class.java)
     }
 
-    private const val BASE_URL = "https://your-actual-api-url/" // Change to your actual API URL
+    private const val BASE_URL = "http://10.0.2.2:7136" // Change to your actual API URL
 }
