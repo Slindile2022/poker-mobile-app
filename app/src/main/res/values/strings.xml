@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Poker</string>
+    <string name="no_sessions_available">No sessions available. Create one to get started!</string>
+    <string name="create_new_session">Create new session</string>
+    <string name="participants">Participants</string>
+    <string name="creation_date">Creation Date</string>
+    <string name="active">Active</string>
+    <string name="no_results_found">No results found</string>
+    <string name="no_sessions_found">No sessions found matching your search</string>
+    <string name="no_matching_sessions_found">No matching sessions found</string>
+    <string name="clear_search">Clear Search</string>
+    <string name="no_search_results">No search results</string>
 </resources>

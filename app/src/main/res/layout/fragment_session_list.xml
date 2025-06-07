@@ -6,15 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".ui.session.SessionListFragment">
 
+    <!-- Replace the old SearchView with our modern one -->
+    <com.poker.utils.ModernSearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/margin_xlarge"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/margin_xlarge"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/searchView">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -31,7 +40,7 @@
         android:id="@+id/emptyView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No sessions available. Create one to get started!"
+        android:text="@string/no_sessions_available"
         android:textAlignment="center"
         android:textSize="16sp"
         android:visibility="gone"
@@ -44,10 +53,12 @@
         android:id="@+id/errorText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#FFCDD2"
-        android:textColor="#B71C1C"
+        android:background="@color/icon_error"
+        android:textColor="@color/white"
         android:paddingTop="@dimen/padding_xlarge"
-        tools:visibility="visible"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        tools:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -67,9 +78,10 @@
         android:id="@+id/createButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="Create new session"
+        android:layout_margin="@dimen/margin_medium"
+        android:contentDescription="@string/create_new_session"
         android:src="@android:drawable/ic_input_add"
+        android:backgroundTint="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

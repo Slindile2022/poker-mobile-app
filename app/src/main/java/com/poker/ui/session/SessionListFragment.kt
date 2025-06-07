@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.poker.databinding.FragmentSessionListBinding
 import com.poker.ui.base.BaseListFragment
+import com.poker.utils.ModernSearchView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,10 +26,16 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
     override val recyclerView: RecyclerView
         get() = binding.recyclerView
 
-    private val sessionAdapter = SessionAdapter { session ->
-        // Handle session click - navigate to session detail
+    private val sessionAdapter = SessionAdapter(
+        onSessionClicked = { session ->
+            // Handle session click
+        },
+        onClearSearch = {
+            // Clear the search
+            viewModel.clearSearch()
+        }
+    )
 
-    }
 
     override val adapter: RecyclerView.Adapter<*>
         get() = sessionAdapter
@@ -65,12 +72,35 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
         binding.createButton.setOnClickListener {
             showCreateSessionDialog()
         }
+
+        // Setup modern search view
+        binding.searchView.setOnQueryTextListener(object : ModernSearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.setSearchQuery(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.setSearchQuery(newText)
+                return true
+            }
+        })
     }
 
     override fun observeData() {
+        // Observe search query to sync UI state
+        viewModel.searchQuery.observe(viewLifecycleOwner) { query ->
+            binding.searchView.setQuery(query, false)
+        }
+
+
         // Observe items changes and update the adapter
         viewModel.items.observe(viewLifecycleOwner) { items ->
             (adapter as SessionAdapter).updateItems(items)
+
+            // Update empty view visibility
+            val showEmptyView = items.size == 1 && items[0] is SessionListItem.EmptyState
+            emptyView.visibility = if (showEmptyView) View.VISIBLE else View.GONE
         }
     }
 

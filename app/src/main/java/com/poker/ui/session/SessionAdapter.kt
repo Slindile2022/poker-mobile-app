@@ -6,14 +6,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.apiclient.api.models.SessionDto
 import com.poker.databinding.ItemEmptyStateBinding
+import com.poker.databinding.ItemNoResultsBinding
 import com.poker.databinding.ItemSessionBinding
 import com.poker.databinding.ItemWelcomeBinding
 import com.poker.ui.viewholder.EmptyStateViewHolder
+import com.poker.ui.viewholder.NoResultsViewHolder
 import com.poker.ui.viewholder.SessionViewHolder
 import com.poker.ui.viewholder.WelcomeViewHolder
 
 class SessionAdapter(
-    private val onSessionClicked: (SessionDto) -> Unit
+    private val onSessionClicked: (SessionDto) -> Unit,
+    private val onClearSearch: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var items: ArrayList<SessionListItem> = arrayListOf()
@@ -33,6 +36,10 @@ class SessionAdapter(
                 val binding = ItemWelcomeBinding.inflate(inflater, parent, false)
                 WelcomeViewHolder(binding)
             }
+            VIEW_TYPE_NO_RESULTS -> NoResultsViewHolder(
+                ItemNoResultsBinding.inflate(inflater, parent, false),
+                onClearSearch
+            )
             else -> throw IllegalArgumentException("Unsupported view type: $viewType")
         }
     }
@@ -42,6 +49,7 @@ class SessionAdapter(
             is SessionListItem.SessionItem -> (holder as SessionViewHolder).bind(item.session)
             is SessionListItem.EmptyState -> (holder as EmptyStateViewHolder).bind()
             is SessionListItem.WelcomeMessage -> (holder as WelcomeViewHolder).bind()
+            is SessionListItem.NoSearchResults -> (holder as NoResultsViewHolder).bind()
         }
     }
 
@@ -52,6 +60,7 @@ class SessionAdapter(
             is SessionListItem.SessionItem -> VIEW_TYPE_SESSION
             is SessionListItem.EmptyState -> VIEW_TYPE_EMPTY
             is SessionListItem.WelcomeMessage -> VIEW_TYPE_WELCOME
+            is SessionListItem.NoSearchResults -> VIEW_TYPE_NO_RESULTS
         }
     }
 
@@ -113,5 +122,6 @@ class SessionAdapter(
         private const val VIEW_TYPE_SESSION = 0
         private const val VIEW_TYPE_EMPTY = 1
         private const val VIEW_TYPE_WELCOME = 2
+        private const val VIEW_TYPE_NO_RESULTS = 3
     }
 }
