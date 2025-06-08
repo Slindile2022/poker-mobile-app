@@ -23,22 +23,44 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Apply JavaPoet fix for Hilt using Kotlin DSL syntax
+      - name: Create comprehensive Hilt fix
         run: |
-          echo "configurations.all { resolutionStrategy.force(\"com.squareup:javapoet:1.13.0\") }" > javapoet-fix.gradle.kts
-          echo "apply(from = \"\${rootDir}/javapoet-fix.gradle.kts\")" >> build.gradle.kts
+          cat > hilt-fix.gradle.kts << 'EOL'
+          allprojects {
+              configurations.all {
+                  resolutionStrategy {
+                      force("com.squareup:javapoet:1.13.0")
+                      // Force compatible versions of key dependencies
+                      force("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+                      force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
+                  }
+              }
+          }
+          EOL
+          
+          echo "apply(from = \"\${rootDir}/hilt-fix.gradle.kts\")" >> settings.gradle.kts
+
+      - name: Create Hilt compatibility init script
+        run: |
+          cat > init.gradle.kts << 'EOL'
+          gradle.beforeProject {
+              project.pluginManager.withPlugin("com.google.dagger.hilt.android") {
+                  project.dependencies.add("implementation", "com.squareup:javapoet:1.13.0")
+              }
+          }
+          EOL
 
       - name: Clean Gradle cache
         run: |
           rm -rf ~/.gradle/caches/
           ./gradlew clean
 
-      - name: Build with Gradle
-        run: ./gradlew build --stacktrace
+      - name: Build with Gradle using init script
+        run: ./gradlew --init-script init.gradle.kts build --stacktrace --info
 
       - name: Build Debug APK (even if tests fail)
         if: always()
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew --init-script init.gradle.kts assembleDebug --stacktrace
 
       - name: Upload APK
         if: always()  # Try to upload even if previous steps failed
