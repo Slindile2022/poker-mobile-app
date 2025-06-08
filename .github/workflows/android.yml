@@ -23,22 +23,30 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Create Gradle initialization script for dependency fixes
+      - name: Create Groovy Init Script for JavaPoet Fix
         run: |
           cat > init.gradle << 'EOL'
           allprojects {
-              repositories {
-                  mavenCentral()
-                  google()
-              }
-          
               configurations.all {
-                  resolutionStrategy.force 'com.squareup:javapoet:1.13.0'
-                  resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
-                  resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0'
+                  resolutionStrategy {
+                      force 'com.squareup:javapoet:1.13.0'
+                  }
               }
           }
           EOL
+
+      - name: Update Java Version in Build Files
+        run: |
+          find . -name "build.gradle.kts" -type f -exec sed -i 's/sourceCompatibility = JavaVersion.VERSION_1_8/sourceCompatibility = JavaVersion.VERSION_17/g' {} \;
+          find . -name "build.gradle.kts" -type f -exec sed -i 's/targetCompatibility = JavaVersion.VERSION_1_8/targetCompatibility = JavaVersion.VERSION_17/g' {} \;
+          find . -name "build.gradle.kts" -type f -exec sed -i 's/jvmTarget = "1.8"/jvmTarget = "17"/g' {} \;
+
+      - name: Add Hilt Configuration to App Module
+        run: |
+          echo "// For Hilt annotation processing" >> app/build.gradle.kts
+          echo "hilt {" >> app/build.gradle.kts
+          echo "    enableAggregatingTask = true" >> app/build.gradle.kts
+          echo "}" >> app/build.gradle.kts
 
       - name: Clean Gradle cache
         run: |
@@ -46,7 +54,7 @@ jobs:
           ./gradlew clean
 
       - name: Build with Gradle using init script
-        run: ./gradlew --init-script init.gradle build --stacktrace --info
+        run: ./gradlew --init-script init.gradle build --stacktrace
 
       - name: Build Debug APK (even if tests fail)
         if: always()
