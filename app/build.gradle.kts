@@ -83,8 +83,17 @@ dependencies {
     // SignalR for real-time updates
     implementation(libs.signalr)
 }
+// For Hilt annotation processing - disabling aggregating task
+hilt {
+    enableAggregatingTask = false
+}
 
-// Allow references to generated code
+// Enhance kapt configuration
 kapt {
     correctErrorTypes = true
+    // Add these options for better performance and error handling
+    arguments {
+        arg("dagger.fastInit", "enabled")
+        arg("dagger.experimentalDaggerErrorMessages", "enabled")
+    }
 }

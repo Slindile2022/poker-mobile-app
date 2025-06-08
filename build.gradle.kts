@@ -6,3 +6,10 @@ plugins {
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.hilt.android) apply false
 }
+
+// force JavaPoet version
+allprojects {
+    configurations.all {
+        resolutionStrategy.force("com.squareup:javapoet:1.13.0")
+    }
+}

@@ -54,8 +54,10 @@ dependencies {
 
 kapt {
     correctErrorTypes = true
+    arguments {
+        arg("dagger.fastInit", "enabled")
+    }
 }
-
 // Apply swagger downloader script
 apply(from = "${project.projectDir}/gradle/swagger-downloader.gradle.kts")
 

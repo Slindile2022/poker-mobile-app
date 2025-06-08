@@ -23,42 +23,89 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Create Groovy Init Script for JavaPoet Fix
+      - name: Apply JavaPoet fix to root build.gradle.kts
         run: |
-          cat > init.gradle << 'EOL'
+          # Add JavaPoet fix to root build.gradle.kts
+          cat >> build.gradle.kts << 'EOL'
+          
+          // Force JavaPoet version for Hilt compatibility
           allprojects {
               configurations.all {
-                  resolutionStrategy {
-                      force 'com.squareup:javapoet:1.13.0'
-                  }
+                  resolutionStrategy.force("com.squareup:javapoet:1.13.0")
               }
           }
           EOL
 
-      - name: Update Java Version in Build Files
+      - name: Update Hilt configuration in app module
         run: |
-          find . -name "build.gradle.kts" -type f -exec sed -i 's/sourceCompatibility = JavaVersion.VERSION_1_8/sourceCompatibility = JavaVersion.VERSION_17/g' {} \;
-          find . -name "build.gradle.kts" -type f -exec sed -i 's/targetCompatibility = JavaVersion.VERSION_1_8/targetCompatibility = JavaVersion.VERSION_17/g' {} \;
-          find . -name "build.gradle.kts" -type f -exec sed -i 's/jvmTarget = "1.8"/jvmTarget = "17"/g' {} \;
+          # Add Hilt configuration to app/build.gradle.kts
+          cat >> app/build.gradle.kts << 'EOL'
+          
+          // For Hilt annotation processing - disabling aggregating task
+          hilt {
+              enableAggregatingTask = false
+          }
+          
+          // Enhance kapt configuration
+          kapt {
+              correctErrorTypes = true
+              // Add these options for better performance and error handling
+              arguments {
+                  arg("dagger.fastInit", "enabled")
+                  arg("dagger.experimentalDaggerErrorMessages", "enabled")
+              }
+          }
+          EOL
 
-      - name: Add Hilt Configuration to App Module
+      - name: Update kapt configuration in api-client module
         run: |
-          echo "// For Hilt annotation processing" >> app/build.gradle.kts
-          echo "hilt {" >> app/build.gradle.kts
-          echo "    enableAggregatingTask = true" >> app/build.gradle.kts
-          echo "}" >> app/build.gradle.kts
+          # Update kapt configuration in api-client/build.gradle.kts
+          if grep -q "kapt {" api-client/build.gradle.kts; then
+            # If kapt block exists, append to it
+            sed -i '/kapt {/a \    arguments {\n        arg("dagger.fastInit", "enabled")\n    }' api-client/build.gradle.kts
+          else
+            # If kapt block doesn't exist, add it
+            cat >> api-client/build.gradle.kts << 'EOL'
+          
+            // Enhance kapt configuration
+            kapt {
+                correctErrorTypes = true
+                arguments {
+                    arg("dagger.fastInit", "enabled")
+                }
+            }
+            EOL
+          fi
+
+      - name: Set Gradle properties for better performance
+        run: |
+          # Create or update gradle.properties
+          cat > gradle.properties << 'EOL'
+          # Gradle properties
+          org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
+          org.gradle.parallel=true
+          org.gradle.caching=true
+          android.useAndroidX=true
+          
+          # Kapt optimizations
+          kapt.use.worker.api=true
+          kapt.incremental.apt=true
+          EOL
 
       - name: Clean Gradle cache
         run: |
           rm -rf ~/.gradle/caches/
           ./gradlew clean
 
-      - name: Build with Gradle using init script
-        run: ./gradlew --init-script init.gradle build --stacktrace
+      - name: Build with Gradle
+        run: |
+          # Set environment variable for more memory
+          export GRADLE_OPTS="-Xmx4g -XX:MaxMetaspaceSize=1g"
+          ./gradlew build --stacktrace
 
       - name: Build Debug APK (even if tests fail)
         if: always()
-        run: ./gradlew --init-script init.gradle assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         if: always()  # Try to upload even if previous steps failed
@@ -66,6 +113,7 @@ jobs:
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: ignore
 
       - name: Upload Build Reports
         if: failure()
@@ -76,3 +124,5 @@ jobs:
             app/build/reports/
             **/build/reports/
             app/build/outputs/logs/
+            app/build/tmp/kapt3/
+          if-no-files-found: ignore
