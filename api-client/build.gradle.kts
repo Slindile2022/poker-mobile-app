@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.openapi.generator)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -24,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
@@ -46,6 +47,13 @@ dependencies {
     implementation(libs.gson.fire)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 // Apply swagger downloader script
@@ -96,10 +104,12 @@ tasks.register("generateApiClient") {
     group = "openapi"
     description = "Downloads Swagger spec and generates API client code"
 
-    // This will invoke the generate task
+    // Clean before generating
+    dependsOn("clean")
     dependsOn("openApiGenerate")
 
     doLast {
         println("API client generated successfully!")
     }
 }
+

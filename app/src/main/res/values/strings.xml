@@ -10,4 +10,9 @@
     <string name="no_matching_sessions_found">No matching sessions found</string>
     <string name="clear_search">Clear Search</string>
     <string name="no_search_results">No search results</string>
+    <string name="create_new_session_title">Create New Session</string>
+    <string name="name_for_your_planning">Enter a name for your planning poker session</string>
+    <string name="session_name">Session Name</string>
+    <string name="create_session">Create Session</string>
+    <string name="cancel">Cancel</string>
 </resources>

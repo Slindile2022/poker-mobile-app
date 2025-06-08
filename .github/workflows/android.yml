@@ -28,10 +28,6 @@ jobs:
           echo "configurations.all { resolutionStrategy.force 'com.squareup:javapoet:1.13.0' }" > javapoet-fix.gradle
           echo "apply from: \"\$rootDir/javapoet-fix.gradle\"" >> build.gradle.kts
 
-      - name: Update AndroidX Core version
-        run: |
-          sed -i 's/coreKtx = "1.15.0"/coreKtx = "1.12.0"/' libs.versions.toml
-
       - name: Clean Gradle cache
         run: |
           rm -rf ~/.gradle/caches/

@@ -105,27 +105,14 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
     }
 
     private fun showCreateSessionDialog() {
-        val editText = EditText(requireContext()).apply {
-            hint = "Session Name"
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(32, 16, 32, 16)
-            }
+        val bottomSheet = CreateSessionBottomSheet.newInstance()
+
+        bottomSheet.setOnSessionCreatedListener { sessionName ->
+            viewModel.createSession(sessionName)
         }
 
-        AlertDialog.Builder(requireContext())
-            .setTitle("Create New Session")
-            .setView(editText)
-            .setPositiveButton("Create") { _, _ ->
-                val sessionName = editText.text.toString().trim()
-                if (sessionName.isNotEmpty()) {
-                    viewModel.createSession(sessionName)
-                }
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        bottomSheet.show(childFragmentManager, CreateSessionBottomSheet.TAG)
     }
+
 }
 
