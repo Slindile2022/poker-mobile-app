@@ -23,29 +23,19 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Create comprehensive Hilt fix
+      - name: Create Gradle initialization script for dependency fixes
         run: |
-          cat > hilt-fix.gradle.kts << 'EOL'
+          cat > init.gradle << 'EOL'
           allprojects {
-              configurations.all {
-                  resolutionStrategy {
-                      force("com.squareup:javapoet:1.13.0")
-                      // Force compatible versions of key dependencies
-                      force("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
-                      force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
-                  }
+              repositories {
+                  mavenCentral()
+                  google()
               }
-          }
-          EOL
           
-          echo "apply(from = \"\${rootDir}/hilt-fix.gradle.kts\")" >> settings.gradle.kts
-
-      - name: Create Hilt compatibility init script
-        run: |
-          cat > init.gradle.kts << 'EOL'
-          gradle.beforeProject {
-              project.pluginManager.withPlugin("com.google.dagger.hilt.android") {
-                  project.dependencies.add("implementation", "com.squareup:javapoet:1.13.0")
+              configurations.all {
+                  resolutionStrategy.force 'com.squareup:javapoet:1.13.0'
+                  resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
+                  resolutionStrategy.force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0'
               }
           }
           EOL
@@ -56,11 +46,11 @@ jobs:
           ./gradlew clean
 
       - name: Build with Gradle using init script
-        run: ./gradlew --init-script init.gradle.kts build --stacktrace --info
+        run: ./gradlew --init-script init.gradle build --stacktrace --info
 
       - name: Build Debug APK (even if tests fail)
         if: always()
-        run: ./gradlew --init-script init.gradle.kts assembleDebug --stacktrace
+        run: ./gradlew --init-script init.gradle assembleDebug --stacktrace
 
       - name: Upload APK
         if: always()  # Try to upload even if previous steps failed
