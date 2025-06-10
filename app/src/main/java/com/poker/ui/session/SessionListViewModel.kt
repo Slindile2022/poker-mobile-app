@@ -19,38 +19,27 @@ class SessionListViewModel @Inject constructor(
     private val sharedPrefs: SharedPreferences
 ) : BaseListViewModel<SessionListItem>() {
 
-    // Implementation of abstract properties from BaseListViewModel
-    private val _isLoading = MutableLiveData<Boolean>(false)
+    private val _isLoading = MutableLiveData(false)
     override val isLoading: LiveData<Boolean> = _isLoading
 
     private val _error = MutableLiveData<String?>(null)
     override val error: LiveData<String?> = _error
 
-    // Search query property
-    private val _searchQuery = MutableLiveData<String>("")
+    private val _searchQuery = MutableLiveData("")
     val searchQuery: LiveData<String> = _searchQuery
 
-    // Raw session data
     private val _sessions = MutableLiveData<List<SessionDto>>()
     val sessions: LiveData<List<SessionDto>> = _sessions
 
-    // Filtered items based on search and session state
     private val _filteredItems = MediatorLiveData<List<SessionListItem>>()
     override val items: LiveData<List<SessionListItem>> = _filteredItems
 
     init {
-        // Set up mediator to react to both search query and sessions changes
         _filteredItems.addSource(_searchQuery) { query ->
-            _sessions.value?.let { sessions ->
-                _filteredItems.value = filterAndTransform(sessions, query)
-            }
+            _sessions.value?.let { sessions -> _filteredItems.value = filterAndTransform(sessions, query) }
         }
 
-        _filteredItems.addSource(_sessions) { sessions ->
-            _filteredItems.value = filterAndTransform(sessions, _searchQuery.value ?: "")
-        }
-
-        // Initial data load
+        _filteredItems.addSource(_sessions) { sessions -> _filteredItems.value = filterAndTransform(sessions, _searchQuery.value ?: "") }
         refresh()
     }
 
@@ -74,26 +63,9 @@ class SessionListViewModel @Inject constructor(
      * Filters and transforms sessions based on search query
      */
     private fun filterAndTransform(sessions: List<SessionDto>, query: String): List<SessionListItem> {
-        // Handle empty sessions list first
-        if (sessions.isEmpty()) {
-            return handleEmptySessionsList()
-        }
-
-        // Apply search filter if query is not empty
-        val filteredSessions = if (query.isBlank()) {
-            sessions
-        } else {
-            sessions.filter { session ->
-                session.name?.contains(query, ignoreCase = true) == true
-            }
-        }
-
-        // Handle no results after filtering
-        if (filteredSessions.isEmpty() && query.isNotBlank()) {
-            return listOf(SessionListItem.NoSearchResults(query))
-        }
-
-        // Transform filtered sessions to list items
+        if (sessions.isEmpty()) return handleEmptySessionsList()
+        val filteredSessions = if (query.isBlank()) { sessions } else { sessions.filter { session -> session.name?.contains(query, ignoreCase = true) == true } }
+        if (filteredSessions.isEmpty() && query.isNotBlank()) return listOf(SessionListItem.NoSearchResults(query))
         return filteredSessions.map { SessionListItem.SessionItem(it) }
     }
 
@@ -123,19 +95,12 @@ class SessionListViewModel @Inject constructor(
             _error.value = null
 
             try {
-                // Load sessions with date parsing error handling
                 val result = try {
                     sessionRepository.getSessions()
                 } catch (e: java.time.format.DateTimeParseException) {
                     handleDateParsingError(e)
                 }
-
-                // Store raw sessions data
                 _sessions.value = result
-
-                // Note: We don't need to explicitly update _filteredItems here
-                // since the MediatorLiveData observer will trigger when _sessions changes
-
             } catch (e: Exception) {
                 _error.value = "Failed to load sessions: ${e.message}"
                 _sessions.value = emptyList()
@@ -163,7 +128,7 @@ class SessionListViewModel @Inject constructor(
 
             try {
                 sessionRepository.createSession(name)
-                loadSessions() // Reload sessions after creating a new one
+                loadSessions()
             } catch (e: Exception) {
                 _error.value = "Failed to create session: ${e.message}"
                 _isLoading.value = false

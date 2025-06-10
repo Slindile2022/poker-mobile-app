@@ -44,8 +44,6 @@ abstract class BaseListFragment<T : ViewBinding, VM : BaseListViewModel<I>, I : 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Set up SwipeRefreshLayout if present
         swipeRefreshLayout?.setOnRefreshListener {
             viewModel.refresh()
             swipeRefreshLayout?.isRefreshing = false
@@ -54,16 +52,8 @@ abstract class BaseListFragment<T : ViewBinding, VM : BaseListViewModel<I>, I : 
 
     override fun setupViewModelObservers() {
         super.setupViewModelObservers()
-
-        // Observe loading and error states
         observeLoadingState(loadingView, viewModel.isLoading)
-
-        if (errorView != null) {
-            observeErrorState(errorView!!, viewModel.error)
-        }
-
-        // Observe items
+        errorView?.let { observeErrorState(errorView!!, viewModel.error) }
         emptyView?.let { observeEmptyState(it, recyclerView, itemsWildcard) }
-
     }
 }

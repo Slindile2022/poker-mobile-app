@@ -16,7 +16,6 @@ abstract class BaseViewModelFragment<T : ViewBinding, VM : ViewModel> : BaseFrag
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Set up ViewModel-specific observers
         setupViewModelObservers()
     }

@@ -39,14 +39,8 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Set the screen title
         requireActivity().title = screenTitle
-
-        // Initialize UI components
         setupUI()
-
-        // Set up observers for ViewModel data
         observeData()
     }
 

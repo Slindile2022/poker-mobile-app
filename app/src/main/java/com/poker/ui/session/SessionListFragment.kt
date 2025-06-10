@@ -1,11 +1,8 @@
 package com.poker.ui.session
 
-import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,15 +24,9 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
         get() = binding.recyclerView
 
     private val sessionAdapter = SessionAdapter(
-        onSessionClicked = { session ->
-            // Handle session click
-        },
-        onClearSearch = {
-            // Clear the search
-            viewModel.clearSearch()
-        }
+        onSessionClicked = { _ -> },
+        onClearSearch = { viewModel.clearSearch() }
     )
-
 
     override val adapter: RecyclerView.Adapter<*>
         get() = sessionAdapter
@@ -52,7 +43,6 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
     override val emptyView: View
         get() = binding.emptyView
 
-    // Use the items property from the BaseListViewModel
     override val items: LiveData<List<SessionListItem>>
         get() = viewModel.items
 
@@ -64,16 +54,11 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
     }
 
     override fun setupUI() {
-        // Setup RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        // Setup create button
-        binding.createButton.setOnClickListener {
-            showCreateSessionDialog()
-        }
+        binding.createButton.setOnClickListener { showCreateSessionDialog() }
 
-        // Setup modern search view
         binding.searchView.setOnQueryTextListener(object : ModernSearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 viewModel.setSearchQuery(query)
@@ -88,17 +73,10 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
     }
 
     override fun observeData() {
-        // Observe search query to sync UI state
-        viewModel.searchQuery.observe(viewLifecycleOwner) { query ->
-            binding.searchView.setQuery(query, false)
-        }
+        viewModel.searchQuery.observe(viewLifecycleOwner) { query -> binding.searchView.setQuery(query, false) }
 
-
-        // Observe items changes and update the adapter
         viewModel.items.observe(viewLifecycleOwner) { items ->
             (adapter as SessionAdapter).updateItems(items)
-
-            // Update empty view visibility
             val showEmptyView = items.size == 1 && items[0] is SessionListItem.EmptyState
             emptyView.visibility = if (showEmptyView) View.VISIBLE else View.GONE
         }
@@ -106,11 +84,7 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
 
     private fun showCreateSessionDialog() {
         val bottomSheet = CreateSessionBottomSheet.newInstance()
-
-        bottomSheet.setOnSessionCreatedListener { sessionName ->
-            viewModel.createSession(sessionName)
-        }
-
+        bottomSheet.setOnSessionCreatedListener { sessionName -> viewModel.createSession(sessionName) }
         bottomSheet.show(childFragmentManager, CreateSessionBottomSheet.TAG)
     }
 
