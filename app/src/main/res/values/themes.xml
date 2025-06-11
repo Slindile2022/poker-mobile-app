@@ -5,8 +5,26 @@
         <item name="android:background">@color/background</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:statusBarColor">@color/primary</item>
+        <item name="backgroundColor">@color/component_background</item>
         <item name="android:textCursorDrawable">@color/primary</item>
         <item name="android:lineSpacingExtra">@dimen/line_spacing_default</item>
         <item name="android:textColorHighlight">@color/primary</item>
     </style>
+
+    <style name="CircleImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="VotingChip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipMinHeight">64dp</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipBackgroundColor">@color/chip_background_selector</item>
+        <item name="chipStrokeColor">@color/chip_stroke_selector</item>
+        <item name="checkedIconVisible">false</item>
+    </style>
+
+
 </resources>

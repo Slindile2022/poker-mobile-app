@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="?attr/colorSurface">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/participantAvatar"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:elevation="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:shapeAppearanceOverlay="@style/CircleImageView"
+            app:strokeColor="?attr/colorPrimaryContainer"
+            app:strokeWidth="3dp"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/participantInitials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/participantAvatar"
+            app:layout_constraintEnd_toEndOf="@id/participantAvatar"
+            app:layout_constraintStart_toStartOf="@id/participantAvatar"
+            app:layout_constraintTop_toTopOf="@id/participantAvatar"
+            tools:text="JS" />
+
+        <TextView
+            android:id="@+id/participantName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="18sp"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            app:layout_constraintBottom_toTopOf="@id/participantJoinTime"
+            app:layout_constraintEnd_toStartOf="@id/voteBadge"
+            app:layout_constraintStart_toEndOf="@id/participantAvatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="John Smith" />
+
+        <TextView
+            android:id="@+id/participantJoinTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/voteBadge"
+            app:layout_constraintStart_toEndOf="@id/participantAvatar"
+            app:layout_constraintTop_toBottomOf="@id/participantName"
+            tools:text="Joined 15 minutes ago" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/voteBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Voted"
+            app:chipBackgroundColor="?attr/colorTertiaryContainer"
+            app:chipIcon="@drawable/ic_check_circle"
+            app:chipIconTint="?attr/colorOnTertiaryContainer"
+            app:chipStrokeWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textEndPadding="8dp"
+            app:textStartPadding="8dp" />
+
+        <View
+            android:id="@+id/onlineIndicator"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:background="@drawable/online_indicator"
+            android:elevation="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/participantAvatar"
+            app:layout_constraintEnd_toEndOf="@id/participantAvatar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

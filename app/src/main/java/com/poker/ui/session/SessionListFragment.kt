@@ -56,9 +56,7 @@ class SessionListFragment : BaseListFragment<FragmentSessionListBinding, Session
     override fun setupUI() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-
         binding.createButton.setOnClickListener { showCreateSessionDialog() }
-
         binding.searchView.setOnQueryTextListener(object : ModernSearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 viewModel.setSearchQuery(query)

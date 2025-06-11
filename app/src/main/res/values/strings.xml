@@ -15,4 +15,6 @@
     <string name="session_name">Session Name</string>
     <string name="create_session">Create Session</string>
     <string name="cancel">Cancel</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

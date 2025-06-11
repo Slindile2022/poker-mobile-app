@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This selector adapts the chip background color based on the story status -->
+    <item android:state_enabled="true" android:color="?attr/colorTertiaryContainer" />
+</selector>
